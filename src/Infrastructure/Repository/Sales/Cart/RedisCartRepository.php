@@ -6,6 +6,7 @@ namespace App\Infrastructure\Repository\Sales\Cart;
 
 use App\Domain\Sales\Cart\Cart;
 use App\Domain\Sales\Cart\CartRepository;
+use App\Domain\Sales\Cart\Serializer\CartNormalizer;
 use Predis\Client;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Uid\Uuid;
@@ -18,6 +19,7 @@ class RedisCartRepository implements CartRepository
 
     public function __construct(
         private readonly Client $redisClient,
+        private readonly CartNormalizer $cartNormalizer,
         private readonly SerializerInterface $serializer,
     ) {
     }
@@ -26,7 +28,7 @@ class RedisCartRepository implements CartRepository
     {
         $this->redisClient->set(
             self::redisKey($cart->getId()),
-            $this->serializer->serialize($cart, 'json'),
+            $this->serializer->serialize($this->cartNormalizer->normalize($cart), 'json'),
             'EX',
             self::EXPIRE_TTL
         );
@@ -35,7 +37,7 @@ class RedisCartRepository implements CartRepository
     public function findById(Uuid $id): ?Cart
     {
         if ($cart = $this->redisClient->get(self::redisKey($id))) {
-            return $this->serializer->deserialize($cart, Cart::class, 'json');
+            return $this->cartNormalizer->denormalize(\json_decode($cart, true));
         }
 
         return null;

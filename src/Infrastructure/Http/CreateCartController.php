@@ -6,6 +6,7 @@ namespace App\Infrastructure\Http;
 
 use App\Domain\Sales\Cart\Cart;
 use App\Domain\Sales\Cart\CartRepository;
+use App\Domain\Sales\Cart\Cost;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,14 +29,13 @@ class CreateCartController extends AbstractController
     )]
     public function __invoke(Request $request): JsonResponse
     {
-        $id = Uuid::v4();
-        $this->cartRepository->save(new Cart($id));
+        $cart = Cart::create(Uuid::v4());
+        $this->cartRepository->save($cart);
 
-       return $this->json(
-           data: [
-               'id' => $id->__toString(),
+       return $this->json([
+               'id' => $cart->getId()->__toString(),
            ],
-           status: Response::HTTP_CREATED
+           Response::HTTP_CREATED
        );
     }
 }

@@ -4,15 +4,17 @@ declare(strict_types=1);
 
 namespace App\Domain\Sales\Cart;
 
+use App\Domain\Sales\Product\Product;
+
 class CartItem
 {
-    public function __construct(private readonly int $productId, private readonly int $quantity)
+    public function __construct(private readonly Product $product, private readonly int $quantity)
     {
     }
 
-    public function getProductId(): int
+    public function getProduct(): Product
     {
-        return $this->productId;
+        return $this->product;
     }
 
     public function getQuantity(): int

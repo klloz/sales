@@ -7,6 +7,8 @@ namespace App\Tests\Integration\Infrastructure\Repository\Sales\Cart;
 use App\Domain\Sales\Cart\Cart;
 use App\Domain\Sales\Cart\CartItem;
 use App\Domain\Sales\Cart\CartRepository;
+use App\Domain\Sales\Product\Product;
+use App\Domain\Sales\Product\ProductRepository;
 use Predis\Client;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Uid\Uuid;
@@ -17,6 +19,8 @@ class RedisCartRepositoryTest extends KernelTestCase
 
     private CartRepository $cartRepository;
 
+    private ProductRepository $productRepository;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -26,6 +30,7 @@ class RedisCartRepositoryTest extends KernelTestCase
         $this->redisClient->flushdb();
 
         $this->cartRepository = static::getContainer()->get(CartRepository::class);
+        $this->productRepository = static::getContainer()->get(ProductRepository::class);
     }
 
     protected function tearDown(): void
@@ -36,9 +41,12 @@ class RedisCartRepositoryTest extends KernelTestCase
 
     public function testSaveAndGetById(): void
     {
+        $product = new Product('Test product', 12234);
+        $this->productRepository->save($product);
+
         $cart = new Cart(
             Uuid::v4(),
-            [new CartItem(123, 12)]
+            [new CartItem($product, 12)]
         );
         $this->cartRepository->save($cart);
 
