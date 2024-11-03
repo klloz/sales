@@ -1,0 +1,4 @@
+when@test:
+  parameters:
+    app.messenger_dsn: '%env(string:MESSENGER_TRANSPORT_DSN)%'
+    app.redis_url: '%env(string:REDIS_URL)%'
