@@ -3,4 +3,4 @@ snc_redis:
         default:
             type: predis
             alias: default
-            dsn: "%env(REDIS_DSN)%"
+            dsn: "%env(REDIS_URL)%"

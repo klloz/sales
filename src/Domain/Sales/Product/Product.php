@@ -16,6 +16,8 @@ class Product
     private int $id;
 
     public function __construct(
+        #[ORM\Column]
+        private string $name,
         #[ORM\Column(type: 'integer')]
         private int $cost
     ) {
@@ -24,6 +26,11 @@ class Product
     public function getId(): int
     {
         return $this->id;
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
     }
 
     public function getCost(): int

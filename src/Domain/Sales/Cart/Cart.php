@@ -11,7 +11,7 @@ class Cart
     /**
      * @param CartItem[] $items
      */
-    public function __construct(private readonly Uuid $id, private readonly array $items = [])
+    public function __construct(private readonly Uuid $id, private array $items = [])
     {
     }
 
@@ -23,5 +23,16 @@ class Cart
     public function getItems(): array
     {
         return $this->items;
+    }
+
+    public function removeProduct(int $productId): void
+    {
+        foreach ($this->getItems() as $key => $item) {
+            if ($item->getProductId() === $productId) {
+                unset($this->items[$key]);
+
+                break;
+            }
+        }
     }
 }
