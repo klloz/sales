@@ -23,3 +23,8 @@ services:
     # please note that last definitions always *replace* previous ones
 
     Predis\Client: '@snc_redis.default'
+
+    App\Domain\Sales\Discount\DiscountsProvider:
+        arguments:
+            $cartDiscountBuilders: !tagged_iterator app.cart_discount_builder
+            $cartItemDiscountBuilders: !tagged_iterator app.cart_item_discount_builder

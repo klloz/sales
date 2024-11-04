@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domain\Sales\Cart\Serializer;
 
+use App\Domain\Sales\Cart\Calculator\CostCalculator;
 use App\Domain\Sales\Cart\Cart;
 use App\Domain\Sales\Cart\CartItem;
 use App\Domain\Sales\Product\ProductRepository;
@@ -13,6 +14,7 @@ class CartNormalizer
 {
     public function __construct(
         private readonly ProductRepository $productRepository,
+        private readonly CostCalculator $costCalculator,
     ) {
     }
 
@@ -44,6 +46,7 @@ class CartNormalizer
         }
 
         $cart = new Cart(Uuid::fromString($data['id']), $items);
+        $cart->setCost($this->costCalculator->calculateCost($cart));
 
         return $cart;
     }
