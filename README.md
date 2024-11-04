@@ -9,4 +9,4 @@ Add discount strategy builder to `Domain/Sales/Discount/Builder` directory. It s
 - exceptions
 - logs
 - phpstan, deptrak
-- 
+- ...
